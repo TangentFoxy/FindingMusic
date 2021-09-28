@@ -22,6 +22,10 @@ enforced by the library.
 - `buy`: (String or NULL) a URL where it can be bought (or where I bought it)
 - `favorite`: (TRUE or NULL) a favorite track
 - `genre`: (String or NULL) primary genre
+- `invalid`: (TRUE or NULL) whether or not this is actually a track (whoops!)
+- `searched`: (TRUE or NULL) whether or not a track has been searched for using
+  `search.lua` (I'm being lazy, and obtaining music this way without fully
+  updating the database, sue me)
 
 (Note: I'm sure I've downloaded many tracks that aren't marked as downloaded.)
 
@@ -36,6 +40,7 @@ A simple interface library to use in a Lua REPL.
 - `add(str)` adds a new track (checks for duplicates)
 - `add_file(file_name)` adds new tracks from the specified file (file must have
   one track per line, ignores empty lines)
+- `remove(name)` removes a track, if it exists (input is normalized)
 - `find(str)` finds possible track matches by normalizing the input string,
   returns them as a list of normalized names
 - `set(match, info)` match can be a list (as is returned by find) or a track
@@ -43,6 +48,7 @@ A simple interface library to use in a Lua REPL.
   these will be set on the matched tracks, overwriting existing values if a key
   is already in use
 - `normalize(str)` returns a normalized form of the input string
+- `name(name)` returns the first name of a track (input is normalized)
 
 `music.random(count, match, include, exclude)` is a little more complicated.
 - `count` is the maximum number of returned names, and defaults to 1

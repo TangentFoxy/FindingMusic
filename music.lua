@@ -8,6 +8,15 @@ function music.normalize(str)
   return str:gsub("%W", ""):lower()
 end
 
+function music.name(name)
+  local entry = music.data[music.normalize(name)]
+  if entry then
+    return entry.names[1]
+  else
+    return nil
+  end
+end
+
 function music.load(force, file_name)
   if music.data and not force then
     print("Music library was already loaded, use 'music.load(true)' to force load.")
@@ -147,6 +156,15 @@ function music.add_file(file_name)
   end
   file:close()
   return true
+end
+
+function music.remove(name)
+  local normalized = music.normalize(name)
+  if music.data[normalized] then
+    music.data[normalized] = nil
+    return true
+  end
+  return false
 end
 
 -- match is a name or a list of names, info is a table of key-value pairs to be set

@@ -6,7 +6,7 @@ if not success then
   print("Install 'urlencode' through LuaRocks for this script to function optimally.")
 end
 
-local help == [[Usages:
+local help = [[Usage:
 
   search-tracklist <file>
 
