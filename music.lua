@@ -43,6 +43,80 @@ function music.find(str)
   return matches
 end
 
+-- count is maximum number of returned names, defaults to 1
+-- match can be nil, a name, or a list of names
+-- include is a table of key-value pairs that must exist
+-- exclude is a table of key-value pairs that must not exist
+-- 'true' values mean non-false keys, any other value must match exactly
+-- example: music.random(5, nil, {url = true}, {downloaded = true}) will return
+--  5 random tracks that have a url, but have not been downloaded
+function music.random(count, match, include, exclude)
+  local matches, results = {}, {}
+  if not music.seed then music.seed = os.time() math.randomseed(music.seed) end
+  count = math.floor(tonumber(count) or 1)
+  local function filter(match, include, exclude)
+    local matches = {}
+    for _, name in ipairs(match) do
+      local valid = true
+      local compare = music.data[name]
+      for k,v in pairs(include) do
+        if v == true then
+          if not compare[k] then
+            valid = false
+            break
+          end
+        else
+          if compare[k] ~= v then
+            valid = false
+            break
+          end
+        end
+      end
+      for k,v in pairs(exclude) do
+        if v == true then
+          if compare[k] then
+            valid = false
+            break
+          end
+        else
+          if compare[k] == v then
+            valid = false
+            break
+          end
+        end
+      end
+      if valid then
+        table.insert(matches, name)
+      end
+    end
+    return matches
+  end
+  if type(match) == "table" then
+    for _, v in ipairs(match) do
+      table.insert(matches, music.normalize(v))
+    end
+  elseif type(match) == "string" then
+    matches[1] = music.normalize(match)
+  else
+    for k in pairs(music.data) do
+      table.insert(matches, k)
+    end
+  end
+  matches = filter(matches, include or {}, exclude or {})
+  while count > 0 and #matches > 0 do
+    for i = #matches, 1, -1 do
+      if math.random() > 0.5 then
+        table.insert(results, table.remove(matches, i))
+        count = count - 1
+      end
+      if count < 1 then
+        break
+      end
+    end
+  end
+  return results
+end
+
 function music.add(name)
   local normalized = music.normalize(name)
   local entry = music.data[normalized]
@@ -75,7 +149,7 @@ function music.add_file(file_name)
   return true
 end
 
--- match is a normalized name or a list of names, info is a table of key-value pairs to be set
+-- match is a name or a list of names, info is a table of key-value pairs to be set
 function music.set(match, info)
   if type(match) == "table" then
     for _, value in ipairs(match) do

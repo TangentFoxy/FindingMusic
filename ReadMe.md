@@ -11,8 +11,8 @@ tracks from episodes 12-149 and 226-230.
 ## music.json
 
 An object of objects, each track indexed by a normalized form of its name, which
-is all lowercase alphanumeric characters only. Note that these are not enforced
-or formalized by the library, but convention I have adopted.
+is all lowercase alphanumeric characters only. Note that only `names` is
+enforced by the library.
 
 - `names`: A list of names equivalent to this track (some tracks have duplicate
   names due to formatting differences)
@@ -37,9 +37,20 @@ A simple interface library to use in a Lua REPL.
 - `add_file(file_name)` adds new tracks from the specified file (file must have
   one track per line, ignores empty lines)
 - `find(str)` finds possible track matches by normalizing the input string,
-  returns them in a list
+  returns them as a list of normalized names
 - `set(match, info)` match can be a list (as is returned by find) or a track
   name (either will be normalized), info must be a table of key-value pairs,
   these will be set on the matched tracks, overwriting existing values if a key
   is already in use
 - `normalize(str)` returns a normalized form of the input string
+
+`music.random(count, match, include, exclude)` is a little more complicated.
+- `count` is the maximum number of returned names, and defaults to 1
+- `match` can be nil, a name, or a list of names (names and lists will have
+  their values normalized)
+- `include` and `exclude` are tables of key-value pairs that must exist or not
+  exist, `true` values mean non-false keys, but other values must match exactly
+
+Example: `music.random(5, nil, {url = true}, {downloaded = true})` will return
+5 random tracks from the whole database that have a url, but do not have
+`downloaded` set.
