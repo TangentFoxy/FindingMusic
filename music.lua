@@ -8,23 +8,27 @@ function music.normalize(str)
   return str:gsub("%W", ""):lower()
 end
 
-function music.load(force)
+function music.load(force, file_name)
   if music.data and not force then
     print("Music library was already loaded, use 'music.load(true)' to force load.")
-    return
+    return false
   end
-  local file = io.open("music.json", "r")
+  local file, err = io.open(file_name or "music.json", "r")
+  if not file then error(err) end
   music.data = cjson.decode(file:read("*a"))
   file:close()
   print("Music library loaded.")
+  return true
 end
 
-function music.save()
+function music.save(file_name)
   local str = cjson.encode(music.data)
-  local file = io.open("music.json", "w")
+  local file, err = io.open(file_name or "music.json", "w")
+  if not file then error(err) end
   file:write(str)
   file:close()
   print("Music library saved.")
+  return true
 end
 
 function music.find(str)
@@ -41,41 +45,54 @@ end
 
 function music.add(name)
   local normalized = music.normalize(name)
-  if music.data[normalized] then
-    local duplicate = false
-    for _, existing_name in ipairs(music.data[normalized].names) do
+  local entry = music.data[normalized]
+  if entry then
+    for _, existing_name in ipairs(entry.names) do
       if existing_name == name then
-        duplicate = true
         print("Already in library.")
-        break
+        return false
       end
     end
-    if not duplicate then
-      table.insert(music.data[normalized].names, name)
-      print("Already in library. Added as alternate name of '" .. musoc.data[normalized].names[1] .. "'")
-    end
+    table.insert(entry.names, name)
+    print("Already in library (normalized to: '" .. normalized .. "'). Added as alternate name of '" .. entry.names[1] .. "'")
+    return true
   else
     music.data[normalized] = { names = { name } }
     print("Track added (normalized to: '" .. normalized .. "')")
+    return true
   end
 end
 
--- match is a normalized name or a list of normalized names, info is a table of key-value pairs to be set
+function music.add_file(file_name)
+  local file, err = io.open(file_name, "r")
+  if not file then error(err) end
+  for track in file:lines() do
+    if #track > 0 then
+      music.add(track)
+    end
+  end
+  file:close()
+  return true
+end
+
+-- match is a normalized name or a list of names, info is a table of key-value pairs to be set
 function music.set(match, info)
   if type(match) == "table" then
     for _, value in ipairs(match) do
       music.set(value, info)
     end
-    return
+    return true
   end
 
-  tab = music.data[match]
+  tab = music.data[music.normalize(match)]
   if not tab then
     print("'" .. tab .. "' does not exist!")
+    return false
   end
   for key, value in pairs(info) do
     tab[key] = value
   end
+  return true
 end
 
 -- returns a list of all tracks with a `url` key but no `downloaded` key.
