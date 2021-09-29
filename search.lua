@@ -33,7 +33,8 @@ local funkwhale = arg[2]
 local results = music.random(count, nil, nil, {downloaded = true, searched = true})
 local track
 for _,v in ipairs(results) do
-  track = music.data[v].names[1]
+  track = music.name(v) -- music.data[v].names[1]
+  if not track then print("Track '" .. v .. "' does not exist?") end -- shouldn't happen
   if urlencode then
     track = urlencode.encode_url(track)
   else
