@@ -39,10 +39,10 @@ for _,v in ipairs(results) do
   else
     track = track:gsub("%s", "+"):gsub("&", "&amp;")
   end
-  os.execute("open \"https://google.com/search?q=" .. track .. "\"")
   if funkwhale then
     os.execute("open \"https://funkwhale.tangentfox.com/search?q=" .. track .. "&type=tracks\"")
   end
+  os.execute("open \"https://google.com/search?q=" .. track .. "\"")
 end
 music.set(results, {searched = true})
 music.save()

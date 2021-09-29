@@ -35,8 +35,8 @@ for line in file:lines() do
     else
       line = line:gsub("%s", "+"):gsub("&", "&amp;")
     end
-    os.execute("open \"https://google.com/search?q=" .. line .. "\"")
     -- appeared to overstress my server opening so many tabs at once, so I removed this
     -- os.execute("open \"https://funkwhale.tangentfox.com/search?q=" .. line .. "&type=tracks\"")
+    os.execute("open \"https://google.com/search?q=" .. line .. "\"")
   end
 end
