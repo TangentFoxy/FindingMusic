@@ -25,7 +25,8 @@ enforced by the library.
 - `invalid`: (TRUE or NULL) whether or not this is actually a track (whoops!)
 - `searched`: (TRUE or NULL) whether or not a track has been searched for using
   `search.lua` (I'm being lazy, and obtaining music this way without fully
-  updating the database, sue me)
+  updating the database, sue me) (note: this script has an issue with tracks
+  with special characters in their names, I am not sure of the cause)
 
 (Note: I'm sure I've downloaded many tracks that aren't marked as downloaded.)
 
@@ -42,7 +43,8 @@ A simple interface library to use in a Lua REPL.
   one track per line, ignores empty lines)
 - `remove(name)` removes a track, if it exists (input is normalized)
 - `find(str)` finds possible track matches by normalizing the input string,
-  returns them as a list of normalized names
+  returns them as a list of normalized names (cannot handle already normalized
+  input in my db because of a bug)
 - `set(match, info)` match can be a list (as is returned by find) or a track
   name (either will be normalized), info must be a table of key-value pairs,
   these will be set on the matched tracks, overwriting existing values if a key

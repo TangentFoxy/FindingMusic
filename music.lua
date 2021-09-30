@@ -10,6 +10,7 @@ end
 
 function music.name(name)
   local entry = music.data[music.normalize(name)]
+  if not entry then entry = music.data[name] end -- some normalized names have extra characters somehow
   if entry then
     return entry.names[1]
   else
@@ -102,10 +103,15 @@ function music.random(count, match, include, exclude)
   end
   if type(match) == "table" then
     for _, v in ipairs(match) do
-      table.insert(matches, music.normalize(v))
+      table.insert(matches, v) -- should be normalized already
     end
   elseif type(match) == "string" then
-    matches[1] = music.normalize(match)
+    -- compensating for db bug...
+    if music.data[music.normalize(match)] then
+      matches[1] = music.normalize(match)
+    else
+      matches[1] = match
+    end
   else
     for k in pairs(music.data) do
       table.insert(matches, k)
@@ -126,7 +132,7 @@ function music.random(count, match, include, exclude)
   return results
 end
 
-function music.add(name)
+function music.add(name) -- input should never be normalized
   local normalized = music.normalize(name)
   local entry = music.data[normalized]
   if entry then
@@ -160,6 +166,7 @@ end
 
 function music.remove(name)
   local normalized = music.normalize(name)
+  if not music.data[normalized] then normalized = name end -- handling db bug
   if music.data[normalized] then
     music.data[normalized] = nil
     return true
@@ -177,8 +184,9 @@ function music.set(match, info)
   end
 
   tab = music.data[music.normalize(match)]
+  if not tab then tab = music.data[match] end -- compensating for database bug
   if not tab then
-    print("'" .. tab .. "' does not exist!")
+    print("'" .. match .. "' does not exist!")
     return false
   end
   for key, value in pairs(info) do

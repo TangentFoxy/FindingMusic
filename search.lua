@@ -31,10 +31,14 @@ local count = tonumber(arg[1]) or 10
 local funkwhale = arg[2]
 
 local results = music.random(count, nil, nil, {downloaded = true, searched = true})
-local track
+local errors_occurred, track = false
 for _,v in ipairs(results) do
   track = music.name(v) -- music.data[v].names[1]
-  if not track then print("Track '" .. v .. "' does not exist?") end -- shouldn't happen
+  if not track then
+    print("Track '" .. v .. "' does not exist?")
+    errors_occurred = true
+    break
+  end
   if urlencode then
     track = urlencode.encode_url(track)
   else
@@ -45,5 +49,9 @@ for _,v in ipairs(results) do
   end
   os.execute("open \"https://google.com/search?q=" .. track .. "\"")
 end
-music.set(results, {searched = true})
-music.save()
+if errors_occurred then
+  print("Database not saved because errors occurred.")
+else
+  music.set(results, {searched = true})
+  music.save()
+end
