@@ -120,7 +120,7 @@ function music.random(count, match, include, exclude)
   matches = filter(matches, include or {}, exclude or {})
   while count > 0 and #matches > 0 do
     for i = #matches, 1, -1 do
-      if math.random() > 0.5 then
+      if math.random() < 1 / #matches then
         table.insert(results, table.remove(matches, i))
         count = count - 1
       end
