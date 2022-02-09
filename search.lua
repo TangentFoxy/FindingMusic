@@ -1,15 +1,18 @@
-#!/usr/bin/env lua
+#!/usr/bin/env luajit
 
-local success, urlencode = pcall(function() return require("urlencode") end)
-if not success then
-  urlencode = nil
-  print("Install 'urlencode' through LuaRocks for this script to function optimally.")
+local function checkreq(name, display)
+  local success, library = pcall(function() return require(name) end)
+  if not success then
+    print("'" .. display or name .. "' missing.")
+    return nil
+  else
+    return library
+  end
 end
-local success, music = pcall(function() return require("music") end)
-if not success then
-  print("music.lua library (and its adjacent music.json database) must be installed.")
-  return
-end
+
+local urlencode = checkreq('urlencode')
+checkreq('cjson', 'lua-cjson')
+local music = checkreq('music')
 
 local help = [[Usage:
 
@@ -20,7 +23,7 @@ local help = [[Usage:
 <funkwhale>: Whether or not to search my FunkWhale instance for the track also.
 
 Optionally requires urlencode to be installed from LuaRocks.
-Currently only tested on MacOS 11.4 (Big Sur).
+Currently only tested on MacOS 11.4 to 12.1.
 ]]
 if arg[1]:find("h") then
   print(help)

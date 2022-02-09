@@ -1,12 +1,7 @@
-Note: Due to commas existing in the source data, all CSV files in `sources` are
-not actually csv files, except `music-cleaned-2.csv`, which is tab-delimmited to
-handle this. It also was abandoned because of handling issues with the `csv`
-library on LuaRocks.
-
 As it has been a while since my initial work on this, I don't remember what
 order of operations led to my initial database, except that it contained all
 tracks played on Friday Night Tracks from episode 150-205. I have since added
-tracks from episodes 12-149 and 226-230.
+tracks from episodes 12-149 and 226-234.
 
 ## music.json
 
@@ -28,7 +23,7 @@ enforced by the library.
   updating the database, sue me) (note: this script has an issue with tracks
   with special characters in their names, I am not sure of the cause)
 
-(Note: I'm sure I've downloaded many tracks that aren't marked as downloaded.)
+(I'm also sure I've downloaded many tracks that aren't marked as downloaded.)
 
 ## music.lua
 
