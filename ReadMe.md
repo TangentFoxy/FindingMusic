@@ -1,7 +1,7 @@
 As it has been a while since my initial work on this, I don't remember what
 order of operations led to my initial database, except that it contained all
 tracks played on Friday Night Tracks from episode 150-205. I have since added
-tracks from episodes 12-149 and 226-234.
+tracks from episodes 12-234.
 
 ## music.json
 
@@ -57,3 +57,7 @@ A simple interface library to use in a Lua REPL.
 Example: `music.random(5, nil, {url = true}, {downloaded = true})` will return
 5 random tracks from the whole database that have a url, but do not have
 `downloaded` set.
+
+---
+
+The [export from grand tracklist](https://github.com/TangentFoxy/FindingMusic/blob/d4b672d9e049736606797781f84d21d2b12e4d90/sources/export-grand-tracklist.lua) script has potential future list, but was removed in a previous commit.
