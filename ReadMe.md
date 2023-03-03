@@ -1,7 +1,6 @@
-As it has been a while since my initial work on this, I don't remember what
-order of operations led to my initial database, except that it contained all
-tracks played on Friday Night Tracks from episode 150-205. I have since added
-tracks from episodes 12-234.
+This database contains tracks played on Friday Night Tracks episodes 12 through
+240. It may contain other tracks because I haven't kept track of whether or not
+I included other sources.
 
 ## music.json
 
@@ -27,7 +26,7 @@ enforced by the library.
 
 ## music.lua
 
-A simple interface library to use in a Lua REPL.
+A simple interface library.
 
 - `load(force, file_name)` loads from specified file or `music.json` (called
   immediately by default, but exposed so you can force a reload or a different
