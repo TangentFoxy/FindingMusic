@@ -12,15 +12,15 @@ end
 
 local urlencode = checkreq('urlencode')
 checkreq('cjson', 'lua-cjson')
-local music = checkreq('music')
+local music = checkreq('music', 'music.lua')
 
 local help = [[Usage:
 
-  search <count> <funkwhale>
+  ./search.lua <count> <funkwhale>
 
-<count>: How many tracks to search for. Defaults to 10
+<count>: How many tracks to search for. Defaults to 5.
          (Opens a new tab per track in your default browser searching Google.)
-<funkwhale>: Whether or not to search my FunkWhale instance for the track also.
+<funkwhale>: true: Search my FunkWhale instance for the track.
 
 Optionally requires urlencode to be installed from LuaRocks.
 Currently only tested on MacOS 11.4 to 12.1.
@@ -30,8 +30,8 @@ if arg[1]:find("h") then
   return false
 end
 
-local count = tonumber(arg[1]) or 10
-local funkwhale = arg[2]
+local count = tonumber(arg[1]) or 5
+local search_funkwhale = arg[2] == "true"
 
 local results = music.random(count, nil, nil, {downloaded = true, searched = true})
 local errors_occurred, name, encoded = false
@@ -47,7 +47,7 @@ for _,v in ipairs(results) do
   else
     encoded = name:gsub("%s", "+"):gsub("&", "&amp;")
   end
-  if funkwhale then
+  if search_funkwhale then
     local separator = name:find(" %- ")
     if separator then name = name:sub(separator + 3) end
     if urlencode then
