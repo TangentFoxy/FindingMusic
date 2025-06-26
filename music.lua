@@ -1,6 +1,6 @@
 -- require this and use it in a REPL to modify the JSON database
 
-local cjson = require("cjson")
+local json = require "lib.dkjson"
 
 local music = {}
 
@@ -25,14 +25,14 @@ function music.load(force, file_name)
   end
   local file, err = io.open(file_name or "music.json", "r")
   if not file then error(err) end
-  music.data = cjson.decode(file:read("*a"))
+  music.data = json.decode(file:read("*a"))
   file:close()
   print("Music library loaded.")
   return true
 end
 
 function music.save(file_name)
-  local str = cjson.encode(music.data)
+  local str = json.encode(music.data, { indent = true })
   local file, err = io.open(file_name or "music.json", "w")
   if not file then error(err) end
   file:write(str)
