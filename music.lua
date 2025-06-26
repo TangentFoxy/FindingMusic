@@ -159,12 +159,19 @@ end
 function music.add_file(file_name)
   local file, err = io.open(file_name, "r")
   if not file then error(err) end
+
+  local added, duplicates = 0, 0
   for track in file:lines() do
     if #track > 0 then
-      music.add(track)
+      if music.add(track) then
+        added = added + 1
+      else
+        duplicates = duplicates + 1
+      end
     end
   end
   file:close()
+  print("Added " .. added .. " tracks, skipped " .. duplicates .. " duplicates.")
   return true
 end
 
