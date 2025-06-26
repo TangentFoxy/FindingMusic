@@ -36,6 +36,7 @@ function music.save(file_name)
   local file, err = io.open(file_name or "music.json", "w")
   if not file then error(err) end
   file:write(str)
+  file:write("\n")
   file:close()
   print("Music library saved.")
   return true
@@ -57,12 +58,15 @@ end
 -- match can be nil, a name, or a list of names
 -- include is a table of key-value pairs that must exist
 -- exclude is a table of key-value pairs that must not exist
--- 'true' values mean non-false keys, any other value must match exactly
+--  true means non-false keys, any other value must match exactly
 -- example: music.random(5, nil, {url = true}, {downloaded = true}) will return
---  5 random tracks that have a url, but have not been downloaded
+--  5 random tracks that have a url value, but downloaded ~= true
 function music.random(count, match, include, exclude)
   local matches, results = {}, {}
-  if not music.seed then music.seed = os.time() math.randomseed(music.seed) end
+  if not music.seed then
+    music.seed = os.time()
+    math.randomseed(music.seed)
+  end
   count = math.floor(tonumber(count) or 1)
   local function filter(match, include, exclude)
     local matches = {}
