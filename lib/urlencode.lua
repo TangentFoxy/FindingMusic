@@ -1,6 +1,8 @@
 -- from https://gist.github.com/liukun/f9ce7d6d14fa45fe9b924a3eed5c3d99
 -- modified to fix an issue with that version, and packaged for use through require
 
+-- WARNING this is made for search engines, replacing " " with "+"
+
 local char_to_hex = function(c)
   return string.format("%%%02X", string.byte(c))
 end
